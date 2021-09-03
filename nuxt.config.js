@@ -1,4 +1,4 @@
-const env = require('./env')
+const env = require('./env');
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -32,7 +32,7 @@ export default {
   },
 
   js: [
-    '@/assets/css/bootstrap.min.js',
+    '@/assets/css/bootstrap.min.js'
   ],
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -57,5 +57,16 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    extend (config, ctx) {
+      // Run ESLint on save
+      if (ctx.isDev && ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        });
+      }
+    }
   }
-}
+};
