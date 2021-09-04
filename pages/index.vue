@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  head () {
+  head() {
     return {
       title: this.$store.state.siteName,
       link: [{ rel: 'canonical', href: `${this.$store.state.baseUrl}` }],
