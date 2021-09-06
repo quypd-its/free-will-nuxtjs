@@ -28,9 +28,31 @@ export default {
 
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
-    baseURL: `${env.appUrl}`
+    baseURL: `${env.appUrl}`,
+    proxy: true,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   },
-
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/api/signin.php', method: 'POST', propertyName: 'access_token' },
+          user: { url: '/api/get_own_info.php', method: 'GET', propertyName: false },
+          logout: false
+        },
+        tokenName: 'X-Authorization'
+      }
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: false,
+      home: '/'
+    },
+    plugins: [{ src: '~/plugins/auth.js', mode: 'client' }]
+  },
   js: [
     '@/assets/css/bootstrap.min.js'
   ],
@@ -38,7 +60,9 @@ export default {
   plugins: [
     '~/plugins/axios'
   ],
-
+  // router: {
+  //   middleware: ['auth']
+  // },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -49,12 +73,16 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/dotenv',
+    '@nuxtjs/proxy',
+    ['@nuxtjs/moment', ['ja']],
     ['@nuxtjs/robots', {
       UserAgent: '*',
       Disallow: ''
     }]
   ],
-
+  srcDir: 'src',
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend(config, ctx) {
